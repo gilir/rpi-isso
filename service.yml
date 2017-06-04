@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  isso:
+    image: gilir/rpi-isso
+#    container_name: isso
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      labels:
+        - traefik.frontend.rule=Host:isso.lavergne.online
+        - traefik.docker.network=proxy-network
+        - traefik.port=8080
+        - traefik.backend=isso
+        - traefik.frontend.entryPoints=https,http
+    environment:
+      - GID=1000
+      - UID=1000
+    ports:
+      - "15080:8080"
+    volumes:
+      - isso_config:/config
+      - isso_db:/db
+    networks:
+      - proxy-network
+
+networks:
+  proxy-network:
+    external:
+      name: proxy-network
+
+volumes:
+  isso_config:
+    external: true
+  isso_db:
+    external: true
