@@ -3,7 +3,6 @@ version: '3'
 services:
   isso:
     image: gilir/rpi-isso
-#    container_name: isso
     deploy:
       replicas: 1
       update_config:
@@ -21,8 +20,8 @@ services:
         - traefik.backend=isso
         - traefik.frontend.entryPoints=https,http
     environment:
-      - GID=1000
-      - UID=1000
+      - GID=904
+      - UID=904
     ports:
       - "15080:8080"
     volumes:
